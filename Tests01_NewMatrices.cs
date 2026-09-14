@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Maths3D;
+using NUnit.Framework;
 using NUnit.Framework.Legacy;
 
 namespace Maths_Matrices.Tests;
@@ -22,15 +23,15 @@ public class Tests01_NewMatrices
         }, m1.ToArray2D());
         ClassicAssert.AreEqual(3, m1.NbLines);
         ClassicAssert.AreEqual(2, m1.NbColumns);
-
+        
         Matrix<int> m2 = new Matrix<int>(2, 3);
         ClassicAssert.AreEqual(new[,]
         {
-            { 0, 0, 0 },
-            { 0, 0, 0 },
-        }, m2.ToArray2D());
-        ClassicAssert.AreEqual(2, m2.NbLines);
-        ClassicAssert.AreEqual(3, m2.NbColumns);
+             { 0, 0, 0 },
+             { 0, 0, 0 },
+         }, m2.ToArray2D());
+         ClassicAssert.AreEqual(2, m2.NbLines);
+         ClassicAssert.AreEqual(3, m2.NbColumns);
     }
 
     [Test]
@@ -47,7 +48,7 @@ public class Tests01_NewMatrices
         );
         ClassicAssert.AreEqual(3, m.NbLines);
         ClassicAssert.AreEqual(3, m.NbColumns);
-
+    
         //See Indexers Documentation =>
         //https://docs.microsoft.com/fr-fr/dotnet/csharp/programming-guide/indexers/
         ClassicAssert.AreEqual(1, m[0, 0]);
