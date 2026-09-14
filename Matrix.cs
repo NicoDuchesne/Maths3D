@@ -16,9 +16,9 @@ public class Matrix<T> where T : INumber<T>
     //Constructors
     public Matrix(int nbLines, int nbColumns)
     {
-        this._matrixArray = new T[nbLines,nbColumns];
         this._nbLines = nbLines;
         this._nbColumns = nbColumns;
+        this._matrixArray = new T[_nbLines,_nbColumns];
     }
 
     public Matrix(T[,] array)
@@ -53,6 +53,34 @@ public class Matrix<T> where T : INumber<T>
         }
         
         return rebuiltArray;
+    }
+
+    public static Matrix<T> Identity(int size)
+    {
+        T[,] newArray = new T[size, size];
+
+        for (int i = 0; i < size; i++)
+        {
+            newArray[i, i] = T.One;
+        }
+        
+        return new Matrix<T>(newArray);
+    }
+
+    public bool IsIdentity()
+    {
+        if (_nbLines != _nbColumns) return false;
+        
+        for (int i = 0; i < _nbLines; i++)
+        {
+            for (int j = 0; j < _nbColumns; j++)
+            {
+                if (i == j && _matrixArray[i, j] != T.One) return false;
+                if (i != j && _matrixArray[i, j] != T.Zero) return false;
+            }
+        }
+        
+        return true;
     }
     
     //Indexers 
