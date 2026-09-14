@@ -82,7 +82,15 @@ public class Matrix<T> where T : INumber<T>
         
         return true;
     }
-
+    
+    //Indexers 
+    public T this[int x, int y]
+    {
+        get => _matrixArray[x,y];
+        set => _matrixArray[x,y] = value;
+    }
+    
+    //Scalar Mutiplication
     public void Multiply(T x)
     {
         for (int i = 0; i < _nbLines; i++)
@@ -93,41 +101,85 @@ public class Matrix<T> where T : INumber<T>
             }
         }
     }
-
+    
     public static Matrix<T> Multiply(Matrix<T> m, T x)
     {
-        Matrix<T> result = new Matrix<T>(m.ToArray2D());
+        Matrix<T> result = new Matrix<T>(m);
         result.Multiply(x);
         return result;
-
     }
     
-    //Indexers 
-    public T this[int x, int y]
-    {
-        get => _matrixArray[x,y];
-        set => _matrixArray[x,y] = value;
-    }
-    
-    //Operators 
     public static Matrix<T> operator *(Matrix<T> left, T right)
     {
-        Matrix<T> result = new Matrix<T>(left.ToArray2D());
-        result.Multiply(right);
-        return result;
+        return Matrix<T>.Multiply(left, right);
     }
     
     public static Matrix<T> operator *(T left, Matrix<T> right)
     {
-        Matrix<T> result = new Matrix<T>(right.ToArray2D());
-        result.Multiply(left);
-        return result;
+        return Matrix<T>.Multiply(right, left);
     }
 
     public static Matrix<T> operator -(Matrix<T> m)
     {
-        Matrix<T> result = new Matrix<T>(m.ToArray2D());
-        result.Multiply(-T.One);
+        return Matrix<T>.Multiply(m, -T.One);
+    }
+    
+    //Add
+    public void Add(Matrix<T> m)
+    {
+        if (_nbLines != m.NbLines || _nbColumns != m.NbColumns)
+        {
+            throw new MatrixSumException("Matrix are not of the same size, impossible to add");
+        }
+        
+        for (int i = 0; i < _nbLines; i++)
+        {
+            for (int j = 0; j < _nbColumns; j++)
+            {
+                _matrixArray[i, j] += m[i,j];
+            }
+        }
+    }
+    
+    public static Matrix<T> Add(Matrix<T> left, Matrix<T> right)
+    {
+        Matrix<T> result = new Matrix<T>(left);
+        result.Add(right);
         return result;
     }
+
+    public static Matrix<T> operator +(Matrix<T> left, Matrix<T> right)
+    { 
+        return Matrix<T>.Add(left, right);
+    }
+    
+    //Subtract
+    public void Subtract(Matrix<T> m)
+    {
+        if (_nbLines != m.NbLines || _nbColumns != m.NbColumns)
+        {
+            throw new MatrixSubtractionException("Matrix are not of the same size, impossible to subtract");
+        }
+        
+        for (int i = 0; i < _nbLines; i++)
+        {
+            for (int j = 0; j < _nbColumns; j++)
+            {
+                _matrixArray[i, j] -= m[i,j];
+            }
+        }
+    }
+    
+    public static Matrix<T> Subtract(Matrix<T> left, Matrix<T> right)
+    {
+        Matrix<T> result = new Matrix<T>(left);
+        result.Subtract(right);
+        return result;
+    }
+
+    public static Matrix<T> operator -(Matrix<T> left, Matrix<T> right)
+    { 
+        return Matrix<T>.Subtract(left, right);
+    }
+    
 }
