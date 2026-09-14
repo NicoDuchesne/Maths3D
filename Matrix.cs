@@ -129,7 +129,7 @@ public class Matrix<T> where T : INumber<T>
     {
         if (_nbLines != m.NbLines || _nbColumns != m.NbColumns)
         {
-            throw new MatrixSumException("Matrix are not of the same size, impossible to add");
+            throw new MatrixSumException("Matrices are not of the same size, impossible to add");
         }
         
         for (int i = 0; i < _nbLines; i++)
@@ -158,7 +158,7 @@ public class Matrix<T> where T : INumber<T>
     {
         if (_nbLines != m.NbLines || _nbColumns != m.NbColumns)
         {
-            throw new MatrixSubtractionException("Matrix are not of the same size, impossible to subtract");
+            throw new MatrixSubtractionException("Matrices are not of the same size, impossible to subtract");
         }
         
         for (int i = 0; i < _nbLines; i++)
@@ -180,6 +180,54 @@ public class Matrix<T> where T : INumber<T>
     public static Matrix<T> operator -(Matrix<T> left, Matrix<T> right)
     { 
         return Matrix<T>.Subtract(left, right);
+    }
+    
+    //Matrices Mutiplication
+    public void Multiply(Matrix<T> m)
+    {
+        if (this._nbColumns != m.NbLines)
+        {
+            throw new MatrixMultiplyException("To multiply two matrices, the number of columns of first matrix must be equal to the number of lines of second matrix");
+        }
+
+        T[,] otherArray = m.ToArray2D();
+        Matrix<T> resultMatrix = new Matrix<T>(this._nbLines, m.NbColumns);
+
+        for (int i = 0; i < this._nbColumns; i++) //i : nombre de colonnes m1 ou nombre de lignes m2, peu importe, le nb de fois où on va construire une matrice intermédiaire
+        {
+            T[,] stepArray = new T[this._nbLines, m.NbColumns]; //matrice intermédiaire (lignes m1, colonnes m2)
+
+            for (int j = 0; j < this._nbLines; j++) //j : nombre de lignes m1
+            {
+                for (int k = 0; k < m.NbColumns; k++) //k : nombre de colonnes m2
+                {
+                    stepArray[j, k] = _matrixArray[j,i] * otherArray[i, k];
+                    //stepArray[j, k] : on construit la matrice intermédiaire en parcourant ses dimensions j et k
+                    //_matrixArray[j,i] : toutes les valeurs d'une colonne i dans m1, j est le step (ligne suivante)
+                    //otherArray[i,k] : toutes les valeurs de la ligne i correspondante dans m2, k est le step (colonne suivante)
+                }
+            }
+            //On ajoute le resultat de cette matrice intermédiaire, jusqu'à temriner la multiplication complète
+            resultMatrix.Add(new Matrix<T>(stepArray));
+        }
+
+        this._nbLines = resultMatrix.NbLines;
+        this._nbColumns = resultMatrix.NbColumns;
+        
+        this._matrixArray = new T[_nbLines,_nbColumns];
+        this._matrixArray = resultMatrix.ToArray2D();
+    }
+    
+    public static Matrix<T> Multiply(Matrix<T> left, Matrix<T> right)
+    {
+        Matrix<T> result = new Matrix<T>(left);
+        result.Multiply(right);
+        return result;
+    }
+    
+    public static Matrix<T> operator *(Matrix<T> left, Matrix<T> right)
+    {
+        return Matrix<T>.Multiply(left, right);
     }
     
 }

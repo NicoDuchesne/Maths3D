@@ -38,3 +38,15 @@ public class MatrixSubtractionException : MatrixException
         : base(message)
     { }
 }
+
+[Serializable()]
+public class MatrixMultiplyException : MatrixException
+{
+    protected MatrixMultiplyException()
+        : base()
+    { }
+
+    public MatrixMultiplyException(string message)
+        : base(message)
+    { }
+}
