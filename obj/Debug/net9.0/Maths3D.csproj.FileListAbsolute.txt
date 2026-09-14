@@ -97,3 +97,4 @@ C:\Users\nicol\Documents\Cours\Annee4\Maths3D\Maths3D\obj\Debug\net9.0\refint\Ma
 C:\Users\nicol\Documents\Cours\Annee4\Maths3D\Maths3D\obj\Debug\net9.0\Maths3D.pdb
 C:\Users\nicol\Documents\Cours\Annee4\Maths3D\Maths3D\obj\Debug\net9.0\Maths3D.genruntimeconfig.cache
 C:\Users\nicol\Documents\Cours\Annee4\Maths3D\Maths3D\obj\Debug\net9.0\ref\Maths3D.dll
+C:\Users\nicol\Documents\Cours\Annee4\Maths3D\Maths3D\obj\Debug\net9.0\Maths3D.sourcelink.json
