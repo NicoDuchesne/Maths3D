@@ -183,7 +183,7 @@ public class Matrix<T> where T : INumber<T>
     }
     
     //Matrices Mutiplication
-    public void Multiply(Matrix<T> m)
+    public Matrix<T> Multiply(Matrix<T> m) 
     {
         if (this._nbColumns != m.NbLines)
         {
@@ -210,24 +210,74 @@ public class Matrix<T> where T : INumber<T>
             //On ajoute le resultat de cette matrice intermédiaire, jusqu'à temriner la multiplication complète
             resultMatrix.Add(new Matrix<T>(stepArray));
         }
-
-        this._nbLines = resultMatrix.NbLines;
-        this._nbColumns = resultMatrix.NbColumns;
         
-        this._matrixArray = new T[_nbLines,_nbColumns];
-        this._matrixArray = resultMatrix.ToArray2D();
+        return resultMatrix;
+        
+        // //Version void
+        // this._nbLines = resultMatrix.NbLines;
+        // this._nbColumns = resultMatrix.NbColumns;
+        //
+        // this._matrixArray = new T[_nbLines,_nbColumns];
+        // this._matrixArray = resultMatrix.ToArray2D();
     }
     
     public static Matrix<T> Multiply(Matrix<T> left, Matrix<T> right)
     {
-        Matrix<T> result = new Matrix<T>(left);
-        result.Multiply(right);
-        return result;
+        return left.Multiply(right);
+        
+        // //version avec void Multiply()
+        // Matrix<T> result = new Matrix<T>(left);
+        // result.Multiply(right);
+        // return result;
     }
     
     public static Matrix<T> operator *(Matrix<T> left, Matrix<T> right)
     {
         return Matrix<T>.Multiply(left, right);
+    }
+    
+    //Transpose
+    
+    public Matrix<T> Transpose()
+    {
+        T[,] result = new T[_nbColumns, _nbLines];
+        
+        for (int i = 0; i < _nbLines; i++)
+        {
+            for (int j = 0; j < _nbColumns; j++)
+            {
+                result[j,i] = _matrixArray[i, j];
+            }
+        }
+        return new Matrix<T>(result);
+        
+        // //version void 
+        // T[,] result = new T[_nbColumns, _nbLines];
+        //
+        // for (int i = 0; i < _nbLines; i++)
+        // {
+        //     for (int j = 0; j < _nbColumns; j++)
+        //     {
+        //         result[j,i] = _matrixArray[i, j];
+        //     }
+        // }
+        //
+        // int temp = this._nbColumns;
+        // this._nbLines = this._nbColumns;
+        // this._nbColumns = temp;
+        //
+        // this._matrixArray = new T[_nbLines,_nbColumns];
+        // this._matrixArray = result;
+    }
+
+    public static Matrix<T> Transpose(Matrix<T> m)
+    {
+        return m.Transpose();
+        
+        // //version avec void Transpose()
+        // Matrix<T> result = new Matrix<T>(m);
+        // result.Transpose();
+        // return result;
     }
     
 }

@@ -25,7 +25,18 @@ public class Tests06_MatricesMultiplication
         });
 
         //Test original
-        // Matrix<int> m3 = m1.Multiply(m2);
+         Matrix<int> m3 = m1.Multiply(m2);
+        
+         ClassicAssert.AreEqual(new[,]
+         {
+             { 6, 18, 4, 6, 7 },
+             { 38, 98, 24, 34, 49 },
+             { 21, 51, 13, 18, 28 },
+             { 13, 19, 7, 8, 21 },
+         }, m3.ToArray2D());
+        
+        // //test en void
+        // m1.Multiply(m2);
         //
         // ClassicAssert.AreEqual(new[,]
         // {
@@ -33,17 +44,7 @@ public class Tests06_MatricesMultiplication
         //     { 38, 98, 24, 34, 49 },
         //     { 21, 51, 13, 18, 28 },
         //     { 13, 19, 7, 8, 21 },
-        // }, m3.ToArray2D());
-        
-        m1.Multiply(m2);
-
-        ClassicAssert.AreEqual(new[,]
-        {
-            { 6, 18, 4, 6, 7 },
-            { 38, 98, 24, 34, 49 },
-            { 21, 51, 13, 18, 28 },
-            { 13, 19, 7, 8, 21 },
-        }, m1.ToArray2D());
+        // }, m1.ToArray2D());
     }
 
     [Test]
