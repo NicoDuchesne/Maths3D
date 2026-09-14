@@ -82,11 +82,52 @@ public class Matrix<T> where T : INumber<T>
         
         return true;
     }
+
+    public void Multiply(T x)
+    {
+        for (int i = 0; i < _nbLines; i++)
+        {
+            for (int j = 0; j < _nbColumns; j++)
+            {
+                _matrixArray[i, j] *= x;
+            }
+        }
+    }
+
+    public static Matrix<T> Multiply(Matrix<T> m, T x)
+    {
+        Matrix<T> result = new Matrix<T>(m.ToArray2D());
+        result.Multiply(x);
+        return result;
+
+    }
     
     //Indexers 
     public T this[int x, int y]
     {
         get => _matrixArray[x,y];
         set => _matrixArray[x,y] = value;
+    }
+    
+    //Operators 
+    public static Matrix<T> operator *(Matrix<T> left, T right)
+    {
+        Matrix<T> result = new Matrix<T>(left.ToArray2D());
+        result.Multiply(right);
+        return result;
+    }
+    
+    public static Matrix<T> operator *(T left, Matrix<T> right)
+    {
+        Matrix<T> result = new Matrix<T>(right.ToArray2D());
+        result.Multiply(left);
+        return result;
+    }
+
+    public static Matrix<T> operator -(Matrix<T> m)
+    {
+        Matrix<T> result = new Matrix<T>(m.ToArray2D());
+        result.Multiply(-T.One);
+        return result;
     }
 }
