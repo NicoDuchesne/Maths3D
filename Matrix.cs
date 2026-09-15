@@ -98,24 +98,24 @@ public class Matrix<T> where T : INumber<T>
     
     public static Matrix<T> GenerateAugmentedMatrix(Matrix<T> m1, Matrix<T> m2)
     {
-        if (m1.NbLines != m2.NbLines || m2.NbColumns != 1)
+        if (m1.NbLines != m2.NbLines)
         {
             throw new AugmentedMatrixException("Matrices cannot generate an augmented matrix");
         }
         
-        Matrix<T> result = new Matrix<T>(m1.NbLines, m1.NbColumns + 1);
+        Matrix<T> result = new Matrix<T>(m1.NbLines, m1.NbColumns + m2.NbColumns);
 
         for (int i = 0; i < result.NbLines; i++)
         {
             for (int j = 0; j < result.NbColumns; j++)
             {
-                if (j == result.NbColumns - 1)
+                if (j < m1.NbColumns)
                 {
-                    result.MatrixArray[i, j] = m2.MatrixArray[i, 0];
+                    result.MatrixArray[i, j] = m1.MatrixArray[i, j];
                 }
                 else
                 {
-                    result.MatrixArray[i, j] = m1.MatrixArray[i, j];
+                    result.MatrixArray[i, j] = m2.MatrixArray[i, j-m1.NbColumns];
                 }
             }
         }

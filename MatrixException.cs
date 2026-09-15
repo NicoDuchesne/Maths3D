@@ -98,3 +98,15 @@ public class SplitMatrixException : MatrixException
         : base(message)
     { }
 }
+
+[Serializable()]
+public class MatrixRowReductionException : MatrixException
+{
+    protected MatrixRowReductionException()
+        : base()
+    { }
+
+    public MatrixRowReductionException(string message)
+        : base(message)
+    { }
+}
