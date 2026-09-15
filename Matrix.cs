@@ -12,6 +12,17 @@ public class Matrix<T> where T : INumber<T>
     //Properties
     public int NbLines => _nbLines;
     public int NbColumns => _nbColumns;
+
+    public T[,] MatrixArray
+    {
+        get { return _matrixArray; }
+        set
+        {
+            _matrixArray = value;
+            _nbLines = value.GetLength(0);
+            _nbColumns = value.GetLength(1);
+        }
+    }
     
     //Constructors
     public Matrix(int nbLines, int nbColumns)

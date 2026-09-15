@@ -50,3 +50,27 @@ public class MatrixMultiplyException : MatrixException
         : base(message)
     { }
 }
+
+[Serializable()]
+public class MatrixElementaryOperationsException : MatrixException
+{
+    protected MatrixElementaryOperationsException()
+        : base()
+    { }
+
+    public MatrixElementaryOperationsException(string message)
+        : base(message)
+    { }
+}
+
+[Serializable()]
+public class MatrixScalarZeroException : MatrixException
+{
+    protected MatrixScalarZeroException()
+        : base()
+    { }
+
+    public MatrixScalarZeroException(string message)
+        : base(message)
+    { }
+}
