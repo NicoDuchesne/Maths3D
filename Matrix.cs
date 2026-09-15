@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace Maths3D;
 
@@ -23,6 +24,7 @@ public class Matrix<T> where T : INumber<T>
             _nbColumns = value.GetLength(1);
         }
     }
+    
     
     //Constructors
     public Matrix(int nbLines, int nbColumns)
@@ -92,6 +94,61 @@ public class Matrix<T> where T : INumber<T>
         }
         
         return true;
+    }
+    
+    public static Matrix<T> GenerateAugmentedMatrix(Matrix<T> m1, Matrix<T> m2)
+    {
+        if (m1.NbLines != m2.NbLines || m2.NbColumns != 1)
+        {
+            throw new AugmentedMatrixException("Matrices cannot generate an augmented matrix");
+        }
+        
+        Matrix<T> result = new Matrix<T>(m1.NbLines, m1.NbColumns + 1);
+
+        for (int i = 0; i < result.NbLines; i++)
+        {
+            for (int j = 0; j < result.NbColumns; j++)
+            {
+                if (j == result.NbColumns - 1)
+                {
+                    result.MatrixArray[i, j] = m2.MatrixArray[i, 0];
+                }
+                else
+                {
+                    result.MatrixArray[i, j] = m1.MatrixArray[i, j];
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+    public (Matrix<T>, Matrix<T>) Split(int x)
+    {
+        if (x <= 0 || x >= _nbColumns - 1)
+        {
+            throw new SplitMatrixException("The column index is out of bound, the matrix cannot be split");
+        }
+        
+        Matrix<T> m1 = new Matrix<T>(this._nbLines, x+1);
+        Matrix<T> m2 = new Matrix<T>(this._nbLines, (this._nbColumns-1) - x);
+        
+        for (int i = 0; i < this._nbLines; i++)
+        {
+            for (int j = 0; j < this._nbColumns; j++)
+            {
+                if (j < x+1)
+                {
+                    m1.MatrixArray[i, j] = this.MatrixArray[i, j];
+                }
+                else
+                {
+                    m2.MatrixArray[i, j-(x+1)] = this.MatrixArray[i, j];
+                }
+            }
+        }
+        
+        return (m1, m2);
     }
     
     //Indexers 

@@ -74,3 +74,27 @@ public class MatrixScalarZeroException : MatrixException
         : base(message)
     { }
 }
+
+[Serializable()]
+public class AugmentedMatrixException : MatrixException
+{
+    protected AugmentedMatrixException()
+        : base()
+    { }
+
+    public AugmentedMatrixException(string message)
+        : base(message)
+    { }
+}
+
+[Serializable()]
+public class SplitMatrixException : MatrixException
+{
+    protected SplitMatrixException()
+        : base()
+    { }
+
+    public SplitMatrixException(string message)
+        : base(message)
+    { }
+}
