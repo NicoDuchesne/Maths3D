@@ -194,8 +194,8 @@ public class Tests08_ElementaryOperations
     {
         //Parameters (in order) 
         //Matrix to modify
-        //Column index to modify
         //Column index to apply
+        //Column index to modify
         //Factor to apply to second column
         // 1 + 4*2 = 9
         // 2 + 5*2 = 12
