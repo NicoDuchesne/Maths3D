@@ -411,4 +411,38 @@ public class Matrix<T> where T : INumber<T>
         return m.SubMatrix(x, y);
     }
     
+    //Determinant
+
+    public T Determinant()
+    {
+        if (_nbLines != _nbColumns)
+        {
+            throw new MatrixInvertException("Matrix is not square, cannot calculate determinant");
+        }
+
+        if (_nbLines == 2 && _nbColumns == 2)
+        {
+            return MatrixArray[0, 0] * MatrixArray[1, 1] - MatrixArray[0, 1] * MatrixArray[1, 0];
+        }
+
+        T sum = T.Zero;
+        for (int i = 0; i < _nbColumns; i++)
+        {
+            Matrix<T> subMatrix = SubMatrix(0, i);
+            
+            T det = subMatrix.Determinant();
+            det *= MatrixArray[0, i];
+            if (i % 2 != 0) det *= -T.One;
+            
+            sum += det;
+        }
+
+        return sum;
+    }
+    
+    public static T Determinant(Matrix<T> m)
+    {
+        return m.Determinant();
+    }
+    
 }
