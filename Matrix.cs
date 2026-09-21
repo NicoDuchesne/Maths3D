@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace Maths3D;
@@ -420,6 +421,8 @@ public class Matrix<T> where T : INumber<T>
             throw new MatrixInvertException("Matrix is not square, cannot calculate determinant");
         }
 
+        if (_nbLines == 1 && _nbColumns == 1) return MatrixArray[0, 0];
+
         if (_nbLines == 2 && _nbColumns == 2)
         {
             return MatrixArray[0, 0] * MatrixArray[1, 1] - MatrixArray[0, 1] * MatrixArray[1, 0];
@@ -443,6 +446,37 @@ public class Matrix<T> where T : INumber<T>
     public static T Determinant(Matrix<T> m)
     {
         return m.Determinant();
+    }
+    
+    //Determinant
+
+    public Matrix<T> Adjugate()
+    {
+        if (_nbLines != _nbColumns)
+        {
+            throw new MatrixInvertException("Matrix is not square, cannot adjugate");
+        }
+        
+        Matrix<T> m = this.Transpose();
+        T[,] result = new T[m._nbLines, m._nbColumns];
+        
+        for (int i = 0; i < m._nbLines; i++)
+        {
+            for (int j = 0; j < m._nbColumns; j++)
+            {
+                Matrix<T> subMatrix = m.SubMatrix(i, j);
+                T det = subMatrix.Determinant();
+                if (i % 2 == 0 && j % 2 != 0 || i % 2 != 0 && j % 2 == 0) det *= -T.One;
+                result[i, j] = det;
+            }
+        }
+        
+        return new Matrix<T>(result);
+    }
+    
+    public static Matrix<T> Adjugate(Matrix<T> m)
+    {
+        return m.Adjugate();
     }
     
 }
