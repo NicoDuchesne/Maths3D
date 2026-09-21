@@ -134,3 +134,27 @@ public class MatrixSubException : MatrixException
         : base(message)
     { }
 }
+
+[Serializable()]
+public class MatrixDeterminantException : MatrixException
+{
+    protected MatrixDeterminantException()
+        : base()
+    { }
+
+    public MatrixDeterminantException(string message)
+        : base(message)
+    { }
+}
+
+[Serializable()]
+public class MatrixAdjugateException : MatrixException
+{
+    protected MatrixAdjugateException()
+        : base()
+    { }
+
+    public MatrixAdjugateException(string message)
+        : base(message)
+    { }
+}

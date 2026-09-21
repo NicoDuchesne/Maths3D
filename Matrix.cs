@@ -375,6 +375,32 @@ public class Matrix<T> where T : INumber<T>
         return m.InvertByRowReduction();
     }
     
+    
+    public Matrix<T> InvertByDeterminant()
+    {
+        if (_nbLines != _nbColumns)
+        {
+            throw new MatrixInvertException("Matrix is not square, cannot be inverted");
+        }
+
+        T det = Determinant();
+        if (Determinant() == T.Zero)
+        {
+            throw new MatrixInvertException("Determinant is null, cannot be inverted");
+        }
+
+        Matrix<T> adj = Adjugate();
+        Matrix<T> inverted = (T.One / det) * adj;
+        
+        return inverted;
+
+    }
+    
+    public static Matrix<T> InvertByDeterminant(Matrix<T> m)
+    {
+        return m.InvertByDeterminant();
+    }
+    
     //Sub Matrix
 
     public Matrix<T> SubMatrix(int x, int y)
@@ -418,7 +444,7 @@ public class Matrix<T> where T : INumber<T>
     {
         if (_nbLines != _nbColumns)
         {
-            throw new MatrixInvertException("Matrix is not square, cannot calculate determinant");
+            throw new MatrixDeterminantException("Matrix is not square, cannot calculate determinant");
         }
 
         if (_nbLines == 1 && _nbColumns == 1) return MatrixArray[0, 0];
@@ -448,13 +474,13 @@ public class Matrix<T> where T : INumber<T>
         return m.Determinant();
     }
     
-    //Determinant
+    //Adjugate
 
     public Matrix<T> Adjugate()
     {
         if (_nbLines != _nbColumns)
         {
-            throw new MatrixInvertException("Matrix is not square, cannot adjugate");
+            throw new MatrixAdjugateException("Matrix is not square, cannot adjugate");
         }
         
         Matrix<T> m = this.Transpose();
