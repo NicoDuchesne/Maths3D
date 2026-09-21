@@ -122,3 +122,15 @@ public class MatrixInvertException : MatrixException
         : base(message)
     { }
 }
+
+[Serializable()]
+public class MatrixSubException : MatrixException
+{
+    protected MatrixSubException()
+        : base()
+    { }
+
+    public MatrixSubException(string message)
+        : base(message)
+    { }
+}

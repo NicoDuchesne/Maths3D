@@ -374,4 +374,41 @@ public class Matrix<T> where T : INumber<T>
         return m.InvertByRowReduction();
     }
     
+    //Sub Matrix
+
+    public Matrix<T> SubMatrix(int x, int y)
+    {
+        if (x >= _nbLines || y >= _nbColumns || _nbLines == 1 || _nbColumns == 1)
+        {
+            throw new MatrixSubException("Wrong indexes, cannot submatrix");
+        }
+        
+        T[,] result = new T[_nbLines-1, _nbColumns-1];
+
+        int m = 0;
+        int n = 0;
+        for (int i = 0; i < _nbLines; i++)
+        {
+            n = 0;
+            if (i == x) continue;
+            
+            for (int j = 0; j < _nbColumns; j++)
+            {
+                if (j == y) continue;
+                
+                result[m, n] = _matrixArray[i, j];
+                n++;
+            }
+
+            m++;
+        }
+        
+        return new Matrix<T>(result);
+    }
+    
+    public static Matrix<T> SubMatrix(Matrix<T> m, int x, int y)
+    {
+        return m.SubMatrix(x, y);
+    }
+    
 }
