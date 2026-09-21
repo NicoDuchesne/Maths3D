@@ -348,4 +348,30 @@ public class Matrix<T> where T : INumber<T>
         // return result;
     }
     
+    //Inverse
+    public Matrix<T> InvertByRowReduction()
+    {
+        if (_nbLines != _nbColumns)
+        {
+            throw new MatrixInvertException("Matrix is not square, cannot be inverted");
+        }
+        
+        Matrix<T> identity = Matrix<T>.Identity(this._nbLines);
+
+        try
+        {
+            (Matrix<T> m1, Matrix<T> m2) reducted = MatrixRowReductionAlgorithm.Apply(this, identity, true);
+            return reducted.m2;
+        }
+        catch (MatrixException e)
+        {
+            throw new MatrixInvertException("Row and columns are all zeros");
+        }
+    }
+    
+    public static Matrix<T> InvertByRowReduction(Matrix<T> m)
+    {
+        return m.InvertByRowReduction();
+    }
+    
 }

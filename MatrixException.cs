@@ -110,3 +110,15 @@ public class MatrixRowReductionException : MatrixException
         : base(message)
     { }
 }
+
+[Serializable()]
+public class MatrixInvertException : MatrixException
+{
+    protected MatrixInvertException()
+        : base()
+    { }
+
+    public MatrixInvertException(string message)
+        : base(message)
+    { }
+}

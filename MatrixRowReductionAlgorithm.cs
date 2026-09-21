@@ -34,13 +34,14 @@ public static class MatrixRowReductionAlgorithm
                 }
 
                 if (maxValue != T.Zero) break; //Dès qu'on trouve cette valeur dans une colonne, on peut sortir de la boucle
+                //Pas de throw ici quand une colone est nulle ?
                 j++;
             }
 
             //Si on ressort de la boucle sans trouver de nouveau pivot, c'est que toutes les prochaines valeurs sont zero, on ne peut plus toucher à la matrice
             if (maxValue == T.Zero || j >= m1.NbLines)
             {
-                if (e) throw new MatrixRowReductionException("Row columns are all zero");
+                if (e) throw new MatrixRowReductionException("Row and columns are all zeros");
                 break;
             }
             
