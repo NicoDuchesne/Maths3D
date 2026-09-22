@@ -158,3 +158,15 @@ public class MatrixAdjugateException : MatrixException
         : base(message)
     { }
 }
+
+[Serializable()]
+public class MatrixIntoVector4Exception : MatrixException
+{
+    protected MatrixIntoVector4Exception()
+        : base()
+    { }
+
+    public MatrixIntoVector4Exception(string message)
+        : base(message)
+    { }
+}

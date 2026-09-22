@@ -52,6 +52,7 @@ public class Matrix<T> where T : INumber<T>
         this._matrixArray = new T[_nbLines,_nbColumns];
         this._matrixArray = matrix.ToArray2D();
     }
+    
 
     //Methods
     public T[,] ToArray2D()
@@ -504,5 +505,6 @@ public class Matrix<T> where T : INumber<T>
     {
         return m.Adjugate();
     }
+    
     
 }
