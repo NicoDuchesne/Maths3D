@@ -11,6 +11,9 @@ public class Transform
     private Matrix<float> _localRotationXMatrix;
     private Matrix<float> _localRotationYMatrix;
     private Matrix<float> _localRotationZMatrix;
+    
+    private Vector3 _localScale;
+    private Matrix<float> _localScaleMatrix;
 
     public Vector3 LocalPosition
     {
@@ -39,6 +42,19 @@ public class Transform
     public Matrix<float> LocalRotationYMatrix => _localRotationYMatrix;
     public Matrix<float> LocalRotationZMatrix => _localRotationZMatrix;
 
+    public Vector3 LocalScale
+    {
+        get { return _localScale; }
+        set
+        {
+            _localScale = value;
+            _localScaleMatrix[0,0] = _localScale.x;
+            _localScaleMatrix[1,1] = _localScale.y;
+            _localScaleMatrix[2,2] = _localScale.z;
+        }
+    }
+    public Matrix<float> LocalScaleMatrix => _localScaleMatrix;
+
     public Transform()
     {
         _localPosition = new Vector3();
@@ -49,6 +65,9 @@ public class Transform
         _localRotationXMatrix = Matrix<float>.Identity(4);
         _localRotationYMatrix = Matrix<float>.Identity(4);
         _localRotationZMatrix = Matrix<float>.Identity(4);
+        
+        _localScale = new Vector3(1f, 1f, 1f);
+        _localScaleMatrix = Matrix<float>.Identity(4);
     }
 
     private void ApplyNewLocalRotation()

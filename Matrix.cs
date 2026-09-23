@@ -127,8 +127,6 @@ public class Matrix<T> where T : INumber<T>
     
     public (Matrix<T>, Matrix<T>) Split(int x)
     {
-        if (x == -1) x = _nbColumns - 2;
-        
         if (x <= 0 || x >= _nbColumns - 1)
         {
             throw new SplitMatrixException("The column index is out of bound, the matrix cannot be split");
