@@ -127,6 +127,8 @@ public class Matrix<T> where T : INumber<T>
     
     public (Matrix<T>, Matrix<T>) Split(int x)
     {
+        if (x == -1) x = _nbColumns - 2;
+        
         if (x <= 0 || x >= _nbColumns - 1)
         {
             throw new SplitMatrixException("The column index is out of bound, the matrix cannot be split");
@@ -151,6 +153,63 @@ public class Matrix<T> where T : INumber<T>
         }
         
         return (m1, m2);
+    }
+
+    public (Matrix<T>, Matrix<T>, Matrix<T>) ReduceOneDimension()
+    {
+        Matrix<T> m1 = new Matrix<T>(_nbLines-1, _nbColumns-1);
+        Matrix<T> m2 = new Matrix<T>(1, _nbColumns);
+        Matrix<T> m3 = new Matrix<T>(_nbLines - 1, 1);
+
+        for (int i = 0; i < _nbLines; i++)
+        {
+            for (int j = 0; j < _nbColumns; j++)
+            {
+                if (i == _nbLines - 1)
+                {
+                    m2.MatrixArray[0, j] = this.MatrixArray[i, j];
+                } else if (j == _nbColumns - 1)
+                {
+                    m3.MatrixArray[i, 0] = this.MatrixArray[i, j];
+                }
+                else
+                {
+                    m1.MatrixArray[i, j] = this.MatrixArray[i, j];
+                }
+            }
+        }
+        
+        return (m1, m2, m3);
+    }
+
+    public static Matrix<T> RebuildMatrix(Matrix<T> m1, Matrix<T> m2, Matrix<T> m3)
+    {
+        if (m1.NbLines != m3.NbLines || m1.NbColumns != m2.NbColumns - 1 || m2.NbLines != 1 || m3.NbColumns != 1)
+        {
+            throw new MatrixException("The 3 matrixes cannot be combined");
+        }
+        
+        Matrix<T> result = new Matrix<T>(m1.NbLines+1, m1.NbColumns+1);
+
+        for (int i = 0; i < result.NbLines; i++)
+        {
+            for (int j = 0; j < result.NbColumns; j++)
+            {
+                if (i == result.NbLines - 1)
+                {
+                    result.MatrixArray[i, j] = m2.MatrixArray[0, j];
+                } else if (j == result.NbColumns - 1)
+                {
+                    result.MatrixArray[i, j] = m3.MatrixArray[i, 0];
+                }
+                else
+                {
+                    result.MatrixArray[i, j] = m1.MatrixArray[i, j];
+                }
+            }
+        }
+        
+        return result;
     }
     
     //Indexers 

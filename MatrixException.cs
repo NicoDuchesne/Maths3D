@@ -170,3 +170,15 @@ public class MatrixIntoVector4Exception : MatrixException
         : base(message)
     { }
 }
+
+[Serializable()]
+public class TransformException : Exception
+{
+    protected TransformException()
+        : base()
+    { }
+
+    public TransformException(string message)
+        : base(message)
+    { }
+}
