@@ -15,6 +15,9 @@ public class Transform
     private Vector3 _localScale;
     private Matrix<float> _localScaleMatrix;
 
+    private Matrix<float> _localToWorldMatrix;
+    private Matrix<float> _worldToLocalMatrix;
+
     public Vector3 LocalPosition
     {
         get { return _localPosition; }
@@ -24,6 +27,8 @@ public class Transform
             _localTranslationMatrix[0,3] = _localPosition.x;
             _localTranslationMatrix[1,3] = _localPosition.y;
             _localTranslationMatrix[2,3] = _localPosition.z;
+            UpdateLocalToWorldMatrix();
+            UpdateWorldToLocalMatrix();
         }
     }
     public Matrix<float> LocalTranslationMatrix => _localTranslationMatrix;
@@ -35,6 +40,8 @@ public class Transform
         {
             _localRotation = value;
             ApplyNewLocalRotation();
+            UpdateLocalToWorldMatrix();
+            UpdateWorldToLocalMatrix();
         }
     }
     public Matrix<float> LocalRotationMatrix => _localRotationMatrix;
@@ -51,9 +58,14 @@ public class Transform
             _localScaleMatrix[0,0] = _localScale.x;
             _localScaleMatrix[1,1] = _localScale.y;
             _localScaleMatrix[2,2] = _localScale.z;
+            UpdateLocalToWorldMatrix();
+            UpdateWorldToLocalMatrix();
         }
     }
     public Matrix<float> LocalScaleMatrix => _localScaleMatrix;
+    
+    public Matrix<float> LocalToWorldMatrix => _localToWorldMatrix;
+    public Matrix<float> WorldToLocalMatrix => _worldToLocalMatrix;
 
     public Transform()
     {
@@ -68,6 +80,9 @@ public class Transform
         
         _localScale = new Vector3(1f, 1f, 1f);
         _localScaleMatrix = Matrix<float>.Identity(4);
+        
+        _localToWorldMatrix = Matrix<float>.Identity(4);
+        _worldToLocalMatrix = Matrix<float>.Identity(4);
     }
 
     private void ApplyNewLocalRotation()
@@ -120,6 +135,16 @@ public class Transform
         }
 
         _localRotationMatrix = _localRotationYMatrix * _localRotationXMatrix * _localRotationZMatrix;
+    }
+
+    public void UpdateLocalToWorldMatrix()
+    {
+        _localToWorldMatrix = _localTranslationMatrix * _localRotationMatrix * _localScaleMatrix;
+    }
+
+    public void UpdateWorldToLocalMatrix()
+    {
+        _worldToLocalMatrix = Matrix<float>.InvertByDeterminant(_localToWorldMatrix);
     }
     
 }
