@@ -11,6 +11,14 @@ public class Vector4
         this.z = z;
         this.w = w;
     }
+    
+    public Vector4()
+    {
+        this.x = 0f;
+        this.y = 0f;
+        this.z = 0f;
+        this.w = 0f;
+    }
 
     private static Matrix<float> Vector4IntoMatrix(Vector4 v)
     {
