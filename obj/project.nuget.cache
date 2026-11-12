@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "KQ+8rG9aceY=",
+  "dgSpecHash": "/2Pz46fGu6o=",
   "success": true,
   "projectFilePath": "C:\\Users\\nicol\\Documents\\Cours\\Annee4\\Maths3D\\Maths3D\\Maths3D.csproj",
   "expectedPackageFiles": [
@@ -13,7 +13,10 @@
     "C:\\Users\\nicol\\.nuget\\packages\\nunit\\4.2.2\\nunit.4.2.2.nupkg.sha512",
     "C:\\Users\\nicol\\.nuget\\packages\\nunit.analyzers\\4.4.0\\nunit.analyzers.4.4.0.nupkg.sha512",
     "C:\\Users\\nicol\\.nuget\\packages\\nunit3testadapter\\4.6.0\\nunit3testadapter.4.6.0.nupkg.sha512",
-    "C:\\Users\\nicol\\.nuget\\packages\\system.reflection.metadata\\1.6.0\\system.reflection.metadata.1.6.0.nupkg.sha512"
+    "C:\\Users\\nicol\\.nuget\\packages\\system.reflection.metadata\\1.6.0\\system.reflection.metadata.1.6.0.nupkg.sha512",
+    "C:\\Users\\nicol\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.22\\microsoft.netcore.app.ref.9.0.22.nupkg.sha512",
+    "C:\\Users\\nicol\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\9.0.22\\microsoft.windowsdesktop.app.ref.9.0.22.nupkg.sha512",
+    "C:\\Users\\nicol\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.22\\microsoft.aspnetcore.app.ref.9.0.22.nupkg.sha512"
   ],
   "logs": []
 }
