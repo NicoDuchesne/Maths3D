@@ -17,4 +17,9 @@ public class Vector3
         this.y = 0f;
         this.z = 0f;
     }
+    
+    public static Vector3 operator +(Vector3 left, Vector3 right)
+    {
+        return new Vector3(left.x + right.x, left.y + right.y, left.z + right.z);
+    }
 }

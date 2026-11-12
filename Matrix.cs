@@ -153,6 +153,7 @@ public class Matrix<T> where T : INumber<T>
         return (m1, m2);
     }
 
+    //Fonction utile pour les matrices 4*4 de Transform, pour split le transform en ses 3 parties
     public (Matrix<T>, Matrix<T>, Matrix<T>) ReduceOneDimension()
     {
         Matrix<T> m1 = new Matrix<T>(_nbLines-1, _nbColumns-1);
@@ -180,6 +181,7 @@ public class Matrix<T> where T : INumber<T>
         return (m1, m2, m3);
     }
 
+    //Fonction utile pour les matrices 4*4 de Transform, pour rebuild un Transform depuis ses 3 parties
     public static Matrix<T> RebuildMatrix(Matrix<T> m1, Matrix<T> m2, Matrix<T> m3)
     {
         if (m1.NbLines != m3.NbLines || m1.NbColumns != m2.NbColumns - 1 || m2.NbLines != 1 || m3.NbColumns != 1)

@@ -1,152 +1,128 @@
 ﻿
+using Maths_Matrices.Tests;
+
 namespace Maths3D;
 
 public class Transform
 {
+    //Position
     private Vector3 _localPosition;
-    private Matrix<float> _localTranslationMatrix;
+    public Vector3 LocalPosition{get => _localPosition; set => _localPosition = value; }
+    public Matrix<float> LocalTranslationMatrix {
+        get
+        {
+            Matrix<float> m = Matrix<float>.Identity(4);
+            m[0,3] = _localPosition.x;
+            m[1,3] = _localPosition.y;
+            m[2,3] = _localPosition.z;
+            return m;
+        }
+    }
     
+    //Rotation
     private Vector3 _localRotation;
-    private Matrix<float> _localRotationMatrix;
-    private Matrix<float> _localRotationXMatrix;
-    private Matrix<float> _localRotationYMatrix;
-    private Matrix<float> _localRotationZMatrix;
+    public Vector3 LocalRotation{get => _localRotation; set => _localRotation = value; }
+    public Matrix<float> LocalRotationMatrix => LocalRotationYMatrix * LocalRotationXMatrix * LocalRotationZMatrix;
+    public Matrix<float> LocalRotationXMatrix => LocalRotationMatrixOnAxis(AXIS.X);
+    public Matrix<float> LocalRotationYMatrix => LocalRotationMatrixOnAxis(AXIS.Y);
+    public Matrix<float> LocalRotationZMatrix => LocalRotationMatrixOnAxis(AXIS.Z);
     
+    //Scale
     private Vector3 _localScale;
-    private Matrix<float> _localScaleMatrix;
-
-    private Matrix<float> _localToWorldMatrix;
-    private Matrix<float> _worldToLocalMatrix;
-
-    public Vector3 LocalPosition
-    {
-        get { return _localPosition; }
-        set
+    public Vector3 LocalScale{get => _localScale; set => _localScale = value; }
+    public Matrix<float> LocalScaleMatrix{
+        get
         {
-            _localPosition = value;
-            _localTranslationMatrix[0,3] = _localPosition.x;
-            _localTranslationMatrix[1,3] = _localPosition.y;
-            _localTranslationMatrix[2,3] = _localPosition.z;
-            UpdateLocalToWorldMatrix();
-            UpdateWorldToLocalMatrix();
+            Matrix<float> m = Matrix<float>.Identity(4);
+            m[0,0] = _localScale.x;
+            m[1,1] = _localScale.y;
+            m[2,2] = _localScale.z;
+            return m;
         }
     }
-    public Matrix<float> LocalTranslationMatrix => _localTranslationMatrix;
-
-    public Vector3 LocalRotation
-    {
-        get { return _localRotation; }
-        set
-        {
-            _localRotation = value;
-            ApplyNewLocalRotation();
-            UpdateLocalToWorldMatrix();
-            UpdateWorldToLocalMatrix();
-        }
-    }
-    public Matrix<float> LocalRotationMatrix => _localRotationMatrix;
-    public Matrix<float> LocalRotationXMatrix => _localRotationXMatrix;
-    public Matrix<float> LocalRotationYMatrix => _localRotationYMatrix;
-    public Matrix<float> LocalRotationZMatrix => _localRotationZMatrix;
-
-    public Vector3 LocalScale
-    {
-        get { return _localScale; }
-        set
-        {
-            _localScale = value;
-            _localScaleMatrix[0,0] = _localScale.x;
-            _localScaleMatrix[1,1] = _localScale.y;
-            _localScaleMatrix[2,2] = _localScale.z;
-            UpdateLocalToWorldMatrix();
-            UpdateWorldToLocalMatrix();
-        }
-    }
-    public Matrix<float> LocalScaleMatrix => _localScaleMatrix;
     
-    public Matrix<float> LocalToWorldMatrix => _localToWorldMatrix;
-    public Matrix<float> WorldToLocalMatrix => _worldToLocalMatrix;
+    //Local and World
+    private Transform _parent;
+    public Matrix<float> LocalToWorldMatrix {
+        get
+        {
+            if (_parent == null)
+            {
+                return LocalTranslationMatrix * LocalRotationMatrix * LocalScaleMatrix;
+            }
+            return _parent.LocalToWorldMatrix * (LocalTranslationMatrix * LocalRotationMatrix * LocalScaleMatrix);
+        }
+    }
+    public Matrix<float> WorldToLocalMatrix => Matrix<float>.InvertByDeterminant(LocalToWorldMatrix);
+    
+    public Vector3 WorldPosition
+    {
+        get
+        {
+            Vector3 v = new Vector3();
+            v.x = LocalToWorldMatrix[0,3];
+            v.y = LocalToWorldMatrix[1,3];
+            v.z = LocalToWorldMatrix[2,3];
+            return v;
+        }
+    }
+    
 
     public Transform()
     {
         _localPosition = new Vector3();
-        _localTranslationMatrix = Matrix<float>.Identity(4);
-        
         _localRotation = new Vector3();
-        _localRotationMatrix = Matrix<float>.Identity(4);
-        _localRotationXMatrix = Matrix<float>.Identity(4);
-        _localRotationYMatrix = Matrix<float>.Identity(4);
-        _localRotationZMatrix = Matrix<float>.Identity(4);
-        
         _localScale = new Vector3(1f, 1f, 1f);
-        _localScaleMatrix = Matrix<float>.Identity(4);
-        
-        _localToWorldMatrix = Matrix<float>.Identity(4);
-        _worldToLocalMatrix = Matrix<float>.Identity(4);
     }
 
-    private void ApplyNewLocalRotation()
+    private Matrix<float> LocalRotationMatrixOnAxis(AXIS axis)
     {
-        ApplyLocalRotationOnAxis(_localRotation.x, AXIS.X);
-        ApplyLocalRotationOnAxis(_localRotation.y, AXIS.Y);
-        ApplyLocalRotationOnAxis(_localRotation.z, AXIS.Z);
-    }
-
-    private void ApplyLocalRotationOnAxis(float teta, AXIS axis)
-    {
-        teta = teta * MathF.PI / 180;
+        float teta;
         Matrix<float> rotationMatrix;
-        (Matrix<float>, Matrix<float>, Matrix<float>) splitMatrix;
+        (Matrix<float>, Matrix<float>, Matrix<float>) splitMatrix = Matrix<float>.Identity(4).ReduceOneDimension();
 
         switch (axis)
         {
             case AXIS.X:
-                splitMatrix = _localRotationXMatrix.ReduceOneDimension();
+                teta = _localRotation.x * MathF.PI / 180;
                 rotationMatrix = new Matrix<float>(new[,]
                 {
                     { 1f, 0f             , 0f              },
                     { 0f, MathF.Cos(teta), -MathF.Sin(teta)},
                     { 0f, MathF.Sin(teta), MathF.Cos(teta) }
                 });
-                _localRotationXMatrix = Matrix<float>.RebuildMatrix(rotationMatrix, splitMatrix.Item2, splitMatrix.Item3);
                 break;
             case AXIS.Y:
-                splitMatrix = _localRotationYMatrix.ReduceOneDimension();
+                teta = _localRotation.y * MathF.PI / 180;
                 rotationMatrix = new Matrix<float>(new[,]
                 {
                     { MathF.Cos(teta) , 0f, MathF.Sin(teta)},
                     { 0f              , 1f, 0f             },
                     { -MathF.Sin(teta), 0f, MathF.Cos(teta)}
                 });
-                _localRotationYMatrix = Matrix<float>.RebuildMatrix(rotationMatrix, splitMatrix.Item2, splitMatrix.Item3);
                 break;
             case AXIS.Z:
-                splitMatrix = _localRotationZMatrix.ReduceOneDimension();
+                teta = _localRotation.z * MathF.PI / 180;
                 rotationMatrix = new Matrix<float>(new[,]
                 {
                     { MathF.Cos(teta), -MathF.Sin(teta), 0f},
                     { MathF.Sin(teta), MathF.Cos(teta) , 0f},
                     { 0f             , 0f              , 1f}
                 });
-                _localRotationZMatrix = Matrix<float>.RebuildMatrix(rotationMatrix, splitMatrix.Item2, splitMatrix.Item3);
                 break;
             default :
                 throw new TransformException("Invalid axis " + axis);
         }
-
-        _localRotationMatrix = _localRotationYMatrix * _localRotationXMatrix * _localRotationZMatrix;
+        
+        rotationMatrix = Matrix<float>.RebuildMatrix(rotationMatrix, splitMatrix.Item2, splitMatrix.Item3);
+        return rotationMatrix;
     }
 
-    public void UpdateLocalToWorldMatrix()
+    public void SetParent(Transform parent)
     {
-        _localToWorldMatrix = _localTranslationMatrix * _localRotationMatrix * _localScaleMatrix;
+        this._parent = parent;
     }
 
-    public void UpdateWorldToLocalMatrix()
-    {
-        _worldToLocalMatrix = Matrix<float>.InvertByDeterminant(_localToWorldMatrix);
-    }
-    
 }
 
 enum AXIS
