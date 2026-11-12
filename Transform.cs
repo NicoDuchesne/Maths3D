@@ -65,6 +65,17 @@ public class Transform
             v.z = LocalToWorldMatrix[2,3];
             return v;
         }
+        set
+        {
+            _localPosition = value;
+            if (_parent != null)
+            {
+                Matrix<float> m = _parent.WorldToLocalMatrix * LocalTranslationMatrix;
+                _localPosition.x = m[0,3];
+                _localPosition.y = m[1,3];
+                _localPosition.z = m[2,3];
+            }
+        }
     }
     
 

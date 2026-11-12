@@ -22,4 +22,14 @@ public class Vector3
     {
         return new Vector3(left.x + right.x, left.y + right.y, left.z + right.z);
     }
+    
+    public static Vector3 operator -(Vector3 left, Vector3 right)
+    {
+        return new Vector3(left.x - right.x, left.y - right.y, left.z - right.z);
+    }
+    
+    public static Vector3 operator -(Vector3 v)
+    {
+        return new Vector3(-v.x, -v.y, -v.z);
+    }
 }
