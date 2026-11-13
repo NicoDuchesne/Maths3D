@@ -33,4 +33,25 @@ public class Vector3
     {
         return new Vector3(-v.x, -v.y, -v.z);
     }
+    
+    public static Matrix<float> Vector3IntoMatrix(Vector3 v)
+    {
+        float[,] result = new float[,]
+        {
+            { v.x },
+            { v.y },
+            { v.z }
+        };
+        return new Matrix<float>(result);
+    }
+    
+    public static Vector3 MatrixIntoVector3(Matrix<float> m)
+    {
+        if (m.NbLines != 3 || m.NbColumns != 1)
+        {
+            throw new MatrixIntoVector4Exception("Matrix isn't of the right dimensions (3,1) to turn it into a Vector3");
+        }
+
+        return new Vector3(m[0, 0], m[1, 0], m[2, 0]);
+    }
 }
