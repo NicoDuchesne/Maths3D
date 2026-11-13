@@ -3,6 +3,7 @@
 public class Vector3
 {
     public float  x, y, z;
+    public float Length => MathF.Sqrt(x*x + y*y + z*z);
 
     public Vector3(float x, float y, float z)
     {
