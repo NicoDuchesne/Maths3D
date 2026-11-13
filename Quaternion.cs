@@ -17,21 +17,23 @@ public struct Quaternion
     public float Norm => w*w + x*x + y*y + z*z;
     public Quaternion Invert => new Quaternion(Conjugate.x/Norm, Conjugate.y/Norm, Conjugate.z/Norm, Conjugate.w/Norm);
 
-    public Matrix<float> Matrix
-    {
-        get
-        {
-            (Matrix<float>, Matrix<float>, Matrix<float>) splitMatrix = Matrix<float>.Identity(4).ReduceOneDimension();
-            
-            Matrix<float> rotationMatrix = new Matrix<float>(new[,] {
-                {1 - 2*(y*y) - 2*(z*z), 2*x*y - 2*w*z        , 2*x*z + 2*w*y         },
-                {2*x*y + 2*w*z        , 1 - 2*(x*x) - 2*(z*z), 2*y*z - 2*w*x         },
-                {2*x*z - 2*w*y        , 2*y*z + 2*w*x        , 1 - 2*(x*x) - 2*(y*y) }
-            }); 
-            
-            return Matrix<float>.RebuildMatrix(rotationMatrix, splitMatrix.Item2, splitMatrix.Item3);
-        }
-    } 
+    private Matrix<float> RotationMatrix => new Matrix<float>(new[,] {
+        {1 - 2*(y*y) - 2*(z*z), 2*x*y - 2*w*z        , 2*x*z + 2*w*y         },
+        {2*x*y + 2*w*z        , 1 - 2*(x*x) - 2*(z*z), 2*y*z - 2*w*x         },
+        {2*x*z - 2*w*y        , 2*y*z + 2*w*x        , 1 - 2*(x*x) - 2*(y*y) }
+    });
+
+    public Matrix<float> Matrix => Matrix<float>.RebuildMatrix(
+        RotationMatrix,
+        Matrix<float>.Identity(4).ReduceOneDimension().Item2,
+        Matrix<float>.Identity(4).ReduceOneDimension().Item3
+    );
+    
+    public Vector3 EulerAngles => MathF.Asin(-RotationMatrix[1,2]) * 180f / MathF.PI != 0 ? 
+        new Vector3( MathF.Asin(-RotationMatrix[1,2]) * 180f / MathF.PI,  MathF.Atan2(RotationMatrix[0,2],RotationMatrix[2,2])  * 180f / MathF.PI , MathF.Atan2(RotationMatrix[1,0],RotationMatrix[1,1]) * 180f / MathF.PI) :
+        new Vector3( MathF.Asin(-RotationMatrix[1,2]) * 180f / MathF.PI,  MathF.Atan2(-RotationMatrix[2,0],RotationMatrix[0,0]) * 180f / MathF.PI,  0f) 
+    ;
+    
     
     public Quaternion(float x, float y, float z, float w)
     {
@@ -62,6 +64,15 @@ public struct Quaternion
         
         return q;
     }
+
+    public static Quaternion Euler(float xAngle, float yAngle, float zAngle)
+    {
+        Quaternion qRX = AngleAxis(xAngle, new Vector3(1f, 0f, 0f));
+        Quaternion qRY = AngleAxis(yAngle, new Vector3(0f, 1f, 0f));
+        Quaternion qRZ = AngleAxis(zAngle, new Vector3(0f, 0f, 1f));
+        
+        return Multiply(qRY, qRX, qRZ);
+    }
     
     public static Quaternion operator *(Quaternion left, Quaternion right)
     {
@@ -82,6 +93,11 @@ public struct Quaternion
         
         return new Quaternion(xPart, yPart, zPart, wPart);
     }
+
+    private static Quaternion Multiply(Quaternion q1, Quaternion q2, Quaternion q3)
+    {
+        return Multiply(Multiply(q1, q2), q3);
+    }
     
     private static Vector3 Multiply(Quaternion q, Vector3 v)
     {
@@ -89,7 +105,7 @@ public struct Quaternion
         Quaternion q2 = new Quaternion(v.x, v.y, v.z, 0f);
         Quaternion q3 = q.Invert;
 
-        Quaternion multiplyResult = Multiply(Multiply(q1, q2), q3);
+        Quaternion multiplyResult = Multiply(q1, q2, q3);
 
         return new Vector3(multiplyResult.x, multiplyResult.y, multiplyResult.z);
     }
