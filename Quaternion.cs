@@ -16,6 +16,22 @@ public struct Quaternion
     public float Length => (float)Math.Sqrt(w*w + x*x + y*y + z*z);
     public float Norm => w*w + x*x + y*y + z*z;
     public Quaternion Invert => new Quaternion(Conjugate.x/Norm, Conjugate.y/Norm, Conjugate.z/Norm, Conjugate.w/Norm);
+
+    public Matrix<float> Matrix
+    {
+        get
+        {
+            (Matrix<float>, Matrix<float>, Matrix<float>) splitMatrix = Matrix<float>.Identity(4).ReduceOneDimension();
+            
+            Matrix<float> rotationMatrix = new Matrix<float>(new[,] {
+                {1 - 2*(y*y) - 2*(z*z), 2*x*y - 2*w*z        , 2*x*z + 2*w*y         },
+                {2*x*y + 2*w*z        , 1 - 2*(x*x) - 2*(z*z), 2*y*z - 2*w*x         },
+                {2*x*z - 2*w*y        , 2*y*z + 2*w*x        , 1 - 2*(x*x) - 2*(y*y) }
+            }); 
+            
+            return Matrix<float>.RebuildMatrix(rotationMatrix, splitMatrix.Item2, splitMatrix.Item3);
+        }
+    } 
     
     public Quaternion(float x, float y, float z, float w)
     {
@@ -84,5 +100,6 @@ public struct Quaternion
     //     {1 - 2*(q.y*q.y) - 2*(q.z*q.z), 2*q.x*q.y - 2*q.w*q.z        , 2*q.x*q.z + 2*q.w*q.y         },
     //     {2*q.x*q.y + 2*q.w*q.z        , 1 - 2*(q.x*q.x) - 2*(q.z*q.z), 2*q.y*q.z - 2*q.w*q.x         },
     //     {2+q.x*q.z - 2*q.w*q.y        , 2*q.y*q.z + 2*q.w*q.x        , 1 - 2*(q.x*q.x) - 2*(q.y*q.y) }
-    // });
+    // }); 
+    
 }
