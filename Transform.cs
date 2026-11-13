@@ -26,6 +26,7 @@ public class Transform
     public Matrix<float> LocalRotationXMatrix => LocalRotationMatrixOnAxis(AXIS.X);
     public Matrix<float> LocalRotationYMatrix => LocalRotationMatrixOnAxis(AXIS.Y);
     public Matrix<float> LocalRotationZMatrix => LocalRotationMatrixOnAxis(AXIS.Z);
+    public Quaternion LocalRotationQuaternion => Quaternion.Euler(_localRotation.x, _localRotation.y, _localRotation.z);
     
     //Scale
     private Vector3 _localScale;
